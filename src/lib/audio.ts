@@ -3,7 +3,7 @@ import { getSettings } from './storage'
 
 let ctx: AudioContext | null = null
 
-function audio(): AudioContext | null {
+function audioContext(): AudioContext | null {
   try {
     if (!ctx) {
       const AC = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
@@ -17,13 +17,13 @@ function audio(): AudioContext | null {
   }
 }
 
-/** Precisa ser chamado dentro de um clique/tecla para liberar o áudio no navegador. */
+/** Libera o áudio após uma interação do usuário no navegador. */
 export function unlockAudio() {
-  audio()
+  audioContext()
 }
 
 function tone(freq: number, startAt: number, dur: number, wave: OscillatorType, gainMul = 1, decay = false) {
-  const c = audio()
+  const c = audioContext()
   const { volume, sound } = getSettings()
   if (!c || sound === 'mudo') return
   const osc = c.createOscillator()
@@ -49,35 +49,28 @@ const wave = () => {
   return s === 'buzina' || s === 'arena' ? 'sawtooth' : s === 'beep' ? 'square' : 'sine'
 }
 const isBell = () => getSettings().sound === 'sino'
-const isArena = () => getSettings().sound === 'arena'
+const isWallTimer = () => getSettings().sound === 'arena'
 
-// Sinal sintetizado com fundamental grave e harmônicos para atravessar o ruído da academia.
-function arenaSignal(startAt: number, dur: number, intensity = 1) {
-  tone(185, startAt, dur, 'sawtooth', 0.72 * intensity, true)
-  tone(370, startAt, dur * 0.82, 'square', 0.22 * intensity, true)
-  tone(555, startAt, dur * 0.58, 'sine', 0.12 * intensity, true)
+// Buzzer contínuo de timer digital de parede, com harmônicos para dar presença.
+function wallBuzzer(startAt: number, dur: number, intensity = 1) {
+  tone(980, startAt, dur, 'square', 0.72 * intensity)
+  tone(1960, startAt, dur, 'square', 0.18 * intensity)
+  tone(490, startAt, dur, 'sawtooth', 0.2 * intensity)
 }
 
 export function playTick() {
-  if (isArena()) {
-    tone(740, 0, 0.11, 'square', 0.28)
+  if (isWallTimer()) {
+    tone(1450, 0, 0.075, 'square', 0.38)
     return
   }
   tone(880, 0, 0.12, isBell() ? 'sine' : wave(), 0.7)
 }
 
 export function playPhaseStart(kind: PhaseKind) {
-  if (isArena()) {
-    if (kind === 'work') {
-      arenaSignal(0, 0.95, 1)
-      arenaSignal(1.12, 0.48, 0.72)
-    } else if (kind === 'rest') {
-      tone(260, 0, 0.62, 'sawtooth', 0.48, true)
-      tone(390, 0, 0.42, 'sine', 0.18, true)
-    } else {
-      tone(330, 0, 0.38, 'square', 0.35, true)
-      tone(495, 0, 0.3, 'sine', 0.16, true)
-    }
+  if (isWallTimer()) {
+    if (kind === 'work') wallBuzzer(0, 1.35)
+    else if (kind === 'rest') wallBuzzer(0, 0.42, 0.72)
+    else wallBuzzer(0, 0.2, 0.55)
     return
   }
   if (kind === 'work') {
@@ -96,10 +89,8 @@ export function playPhaseStart(kind: PhaseKind) {
 }
 
 export function playEnd() {
-  if (isArena()) {
-    arenaSignal(0, 1.1, 1)
-    arenaSignal(0.58, 1.1, 0.88)
-    arenaSignal(1.16, 1.35, 0.76)
+  if (isWallTimer()) {
+    wallBuzzer(0, 1.8)
     return
   }
   const w = isBell() ? 'sine' : wave()
