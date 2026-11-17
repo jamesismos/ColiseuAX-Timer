@@ -180,7 +180,14 @@ export default function Run({ kind, id }: { kind: 'timer' | 'playlist' | 'tv'; i
     <main className={`run ${state.done ? 'k-done' : KIND_CLASS[phase.kind]} ${lastThree ? 'warn' : ''}`}>
       <div className="run-top">
         <Brand />
-        <div className="run-name">{phase.group ?? resolved.name}</div>
+        <div className="run-top-actions">
+          <div className="run-name">{phase.group ?? resolved.name}</div>
+          {kind === 'tv' && (
+            <button className="btn ghost run-settings" onClick={() => go('/settings')}>
+              Configurar timer
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="run-grid">
