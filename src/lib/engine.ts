@@ -218,7 +218,7 @@ export const DEFAULT_PHRASES = [
   'O tatame ensina humildade.',
   'Um dia de cada vez, uma posição de cada vez.',
   'Constância é o segredo.',
-  'Tap cedo, treine amanhã.',
+  'Desafie seus limites. Evolua a cada treino.',
   'Foco, calma e ação.',
   'Se não der hoje, dá amanhã.',
 ]
