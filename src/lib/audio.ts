@@ -46,15 +46,40 @@ function tone(freq: number, startAt: number, dur: number, wave: OscillatorType, 
 
 const wave = () => {
   const s = getSettings().sound
-  return s === 'buzina' ? 'sawtooth' : s === 'beep' ? 'square' : 'sine'
+  return s === 'buzina' || s === 'arena' ? 'sawtooth' : s === 'beep' ? 'square' : 'sine'
 }
 const isBell = () => getSettings().sound === 'sino'
+const isArena = () => getSettings().sound === 'arena'
+
+// Sinal sintetizado com fundamental grave e harmônicos para atravessar o ruído da academia.
+function arenaSignal(startAt: number, dur: number, intensity = 1) {
+  tone(185, startAt, dur, 'sawtooth', 0.72 * intensity, true)
+  tone(370, startAt, dur * 0.82, 'square', 0.22 * intensity, true)
+  tone(555, startAt, dur * 0.58, 'sine', 0.12 * intensity, true)
+}
 
 export function playTick() {
+  if (isArena()) {
+    tone(740, 0, 0.11, 'square', 0.28)
+    return
+  }
   tone(880, 0, 0.12, isBell() ? 'sine' : wave(), 0.7)
 }
 
 export function playPhaseStart(kind: PhaseKind) {
+  if (isArena()) {
+    if (kind === 'work') {
+      arenaSignal(0, 0.95, 1)
+      arenaSignal(1.12, 0.48, 0.72)
+    } else if (kind === 'rest') {
+      tone(260, 0, 0.62, 'sawtooth', 0.48, true)
+      tone(390, 0, 0.42, 'sine', 0.18, true)
+    } else {
+      tone(330, 0, 0.38, 'square', 0.35, true)
+      tone(495, 0, 0.3, 'sine', 0.16, true)
+    }
+    return
+  }
   if (kind === 'work') {
     if (isBell()) {
       tone(1320, 0, 1.4, 'sine', 1, true)
@@ -71,6 +96,12 @@ export function playPhaseStart(kind: PhaseKind) {
 }
 
 export function playEnd() {
+  if (isArena()) {
+    arenaSignal(0, 1.1, 1)
+    arenaSignal(0.58, 1.1, 0.88)
+    arenaSignal(1.16, 1.35, 0.76)
+    return
+  }
   const w = isBell() ? 'sine' : wave()
   for (let i = 0; i < 3; i++) tone(1320, i * 0.45, isBell() ? 1.0 : 0.3, w, 1, isBell())
 }
