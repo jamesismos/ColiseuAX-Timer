@@ -33,7 +33,7 @@ function createStore<T>(key: string, initial: T, merge: boolean) {
   }
 }
 
-export type SoundStyle = 'sino' | 'beep' | 'buzina' | 'mudo'
+export type SoundStyle = 'arena' | 'sino' | 'beep' | 'buzina' | 'mudo'
 
 export interface Settings {
   academy: string
@@ -56,7 +56,7 @@ export const DEFAULT_SETTINGS: Settings = {
   accent: '#d10f1c',
   bgUrl: '',
   logoData: '',
-  sound: 'sino',
+  sound: 'arena',
   volume: 80,
   showPhrases: true,
   phrases: DEFAULT_PHRASES,
