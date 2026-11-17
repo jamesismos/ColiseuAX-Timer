@@ -1,0 +1,4 @@
+# O ColiseuAX Timer é um produto proprietário.
+# Não solicitar indexação ou rastreamento automatizado.
+User-agent: *
+Disallow: /
