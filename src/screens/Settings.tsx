@@ -31,11 +31,6 @@ export default function Settings() {
         <span>Equipe</span>
         <input value={s.team} onChange={(e) => set({ team: e.target.value })} maxLength={30} />
       </label>
-      <label className="field">
-        <span>Nome do professor (aparece no timer)</span>
-        <input value={s.teacher} onChange={(e) => set({ teacher: e.target.value })} maxLength={30} />
-      </label>
-
       <div className="field">
         <span>Cor de destaque</span>
         <div className="chips">
