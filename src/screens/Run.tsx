@@ -12,7 +12,7 @@ import {
   type Phase,
   type RunState,
 } from '../lib/engine'
-import { go, goBack } from '../lib/nav'
+import { go, goBack, keyAction } from '../lib/nav'
 import { usePlaylists, useSettings, useTimers } from '../lib/storage'
 
 const KIND_CLASS: Record<Phase['kind'], string> = { prep: 'k-prep', work: 'k-work', rest: 'k-rest', free: 'k-work' }
@@ -137,15 +137,17 @@ export default function Run({ kind, id }: { kind: 'timer' | 'playlist' | 'tv'; i
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.index])
 
-  // Atalhos: espaço / play-pause alternam; setas e OK são tratados pela navegação global
+  // Teclas de mídia do controle: play, pause, avançar e voltar fase
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'MediaPlayPause' || e.key === 'MediaPlay' || e.key === 'MediaPause') {
-        e.preventDefault()
-        running ? pause() : start()
-      }
-      if (e.key === 'MediaTrackNext') next(1)
-      if (e.key === 'MediaTrackPrevious') next(-1)
+      const a = keyAction(e)
+      if (a === 'playpause') running ? pause() : start()
+      else if (a === 'play' && !running) start()
+      else if (a === 'pause' && running) pause()
+      else if (a === 'next') next(1)
+      else if (a === 'prev') next(-1)
+      else return
+      e.preventDefault()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)

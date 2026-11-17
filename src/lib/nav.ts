@@ -41,8 +41,6 @@ const isVisible = (el: HTMLElement) => {
 }
 
 type Dir = 'up' | 'down' | 'left' | 'right'
-const KEY_DIR: Record<string, Dir> = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right' }
-
 function moveFocus(dir: Dir) {
   const all = Array.from(document.querySelectorAll<HTMLElement>(SELECTOR)).filter(
     (el) => !(el as HTMLButtonElement).disabled && el.tabIndex !== -1 && isVisible(el),
@@ -76,26 +74,59 @@ function moveFocus(dir: Dir) {
   best?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
 }
 
-const BACK_KEYS = ['Escape', 'GoBack', 'BrowserBack', 'XF86Back']
-const BACK_CODES = [4, 10009, 461] // Android TV, Tizen, webOS
+// ---------- Mapeamento de teclas (controles de Android TV, Fire TV, Samsung/Tizen, LG/webOS) ----------
+export type KeyAction = Dir | 'select' | 'back' | 'playpause' | 'play' | 'pause' | 'next' | 'prev' | null
+
+const KEY_NAMES: Record<string, KeyAction> = {
+  ArrowUp: 'up', Up: 'up', ArrowDown: 'down', Down: 'down', ArrowLeft: 'left', Left: 'left', ArrowRight: 'right', Right: 'right',
+  Select: 'select',
+  Escape: 'back', GoBack: 'back', BrowserBack: 'back', XF86Back: 'back', Back: 'back',
+  MediaPlayPause: 'playpause', MediaPlay: 'play', MediaPause: 'pause',
+  MediaTrackNext: 'next', MediaFastForward: 'next', MediaTrackPrevious: 'prev', MediaRewind: 'prev',
+}
+
+const KEY_CODES: Record<number, KeyAction> = {
+  38: 'up', 40: 'down', 37: 'left', 39: 'right',
+  23: 'select', // DPAD_CENTER do Android
+  27: 'back', 4: 'back', 166: 'back', 10009: 'back', 461: 'back', // Esc, Android, navegador, Tizen, webOS
+  179: 'playpause', 10252: 'playpause', 415: 'play', 19: 'pause',
+  176: 'next', 417: 'next', 177: 'prev', 412: 'prev',
+}
+
+/** Converte uma tecla (por nome ou código) em ação. Backspace só vale fora de campos de texto. */
+export function keyAction(k: { key?: string; keyCode?: number }, typing = false): KeyAction {
+  if (k.key === 'Backspace') return typing ? null : 'back'
+  if (k.key && k.key in KEY_NAMES) return KEY_NAMES[k.key]
+  if (k.keyCode !== undefined && k.keyCode in KEY_CODES) return KEY_CODES[k.keyCode]
+  return null
+}
 
 export function installRemoteControl() {
   const onKey = (e: KeyboardEvent) => {
     const target = e.target as HTMLElement | null
     const typing = !!target && (target.tagName === 'TEXTAREA' || (target.tagName === 'INPUT' && ['text', 'search', 'url'].includes((target as HTMLInputElement).type)))
+    const action = keyAction(e, typing)
+    if (!action) return
 
-    if (BACK_KEYS.includes(e.key) || BACK_CODES.includes(e.keyCode) || (e.key === 'Backspace' && !typing)) {
+    if (action === 'back') {
       e.preventDefault()
       goBack()
       return
     }
-    const dir = KEY_DIR[e.key]
-    if (!dir) return
-    // Dentro de campos de texto, esquerda/direita movem o cursor
-    if (typing && (dir === 'left' || dir === 'right')) return
-    if (target?.tagName === 'SELECT') return
-    e.preventDefault()
-    moveFocus(dir)
+    if (action === 'select') {
+      // DPAD_CENTER / "Select": aciona o item em foco (Enter já faz isso sozinho)
+      e.preventDefault()
+      ;(document.activeElement as HTMLElement | null)?.click?.()
+      return
+    }
+    if (action === 'up' || action === 'down' || action === 'left' || action === 'right') {
+      // Dentro de campos de texto, esquerda/direita movem o cursor
+      if (typing && (action === 'left' || action === 'right')) return
+      if (target?.tagName === 'SELECT') return
+      e.preventDefault()
+      moveFocus(action)
+    }
+    // teclas de mídia são tratadas pela tela do timer
   }
   window.addEventListener('keydown', onKey)
   return () => window.removeEventListener('keydown', onKey)
