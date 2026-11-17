@@ -164,6 +164,7 @@ export default function Run({ kind, id }: { kind: 'timer' | 'playlist' | 'tv'; i
     )
   }
 
+  const selectedTimerId = 'id' in resolved ? resolved.id : null
   const secs = displaySeconds(phase, state.elapsedMs)
   const queue = phases.slice(state.index, state.index + 6)
   const lastThree = running && !phase.open && secs > 0 && secs <= 3
@@ -183,7 +184,11 @@ export default function Run({ kind, id }: { kind: 'timer' | 'playlist' | 'tv'; i
         <div className="run-top-actions">
           <div className="run-name">{phase.group ?? resolved.name}</div>
           {kind === 'tv' && (
-            <button className="btn ghost run-settings" onClick={() => go('/settings')}>
+            <button
+              className="btn ghost run-settings"
+              onClick={() => selectedTimerId && go(`/edit/${selectedTimerId}`)}
+              disabled={!selectedTimerId}
+            >
               Configurar timer
             </button>
           )}
