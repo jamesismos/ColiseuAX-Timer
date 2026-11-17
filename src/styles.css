@@ -727,3 +727,21 @@ textarea {
   opacity: 1;
   color: var(--silver);
 }
+
+.run-top-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+.run-settings {
+  white-space: nowrap;
+  font-size: 0.85rem;
+}
+@media (max-width: 600px) {
+  .run-top-actions {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.4rem;
+  }
+}
