@@ -219,6 +219,18 @@ export default function Run({ kind, id }: { kind: 'timer' | 'playlist' | 'tv'; i
         </aside>
       </div>
 
+      {kind === 'tv' && (
+        <a
+          className="run-credit"
+          href="https://www.instagram.com/jamesismos/"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Desenvolvido por @jamesismos no Instagram"
+        >
+          Desenvolvido por <strong>@jamesismos</strong>
+        </a>
+      )}
+
       <div className="run-controls">
         <button ref={playRef} className="btn primary big" onClick={running ? pause : start}>
           {running ? 'Pausar' : state.done ? 'Reiniciar' : started ? 'Continuar' : 'Iniciar'}
