@@ -709,3 +709,21 @@ textarea {
 .run-top .logo {
   height: 3.6rem;
 }
+
+/* ---------- Crédito no cantinho ---------- */
+.credit {
+  position: fixed;
+  right: 0.8rem;
+  bottom: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-size: 0.7rem;
+  color: var(--muted);
+  opacity: 0.7;
+  text-decoration: none;
+}
+.credit:hover {
+  opacity: 1;
+  color: var(--silver);
+}
