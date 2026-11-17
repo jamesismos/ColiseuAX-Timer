@@ -208,14 +208,7 @@ export const TEMPLATES: TimerConfig[] = [
 ]
 
 export const DEFAULT_PHRASES = [
-  'Disciplina vence talento.',
-  'Respira, confia na técnica.',
-  'Cada round é uma chance de evoluir.',
-  'Quem treina, confia.',
-  'O tatame ensina humildade.',
-  'Um dia de cada vez, uma posição de cada vez.',
-  'Constância é o segredo.',
-  'Tap cedo, treine amanhã.',
-  'Foco, calma e ação.',
-  'Se não der hoje, dá amanhã.',
+  'Não faça o que eu não te ensinei. AX!',
+  'Para de ficar inventando! AX!',
+  'Depois quer competir e não faz nem o básico direito! AX!',
 ]
