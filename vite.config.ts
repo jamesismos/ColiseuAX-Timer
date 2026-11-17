@@ -4,7 +4,15 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  // Navegadores de TV antigos: gerar JS mais compatível
-  build: { target: 'es2019' },
+  // Compatibilidade com navegadores de TV antigos.
+  // O bundle de produção não publica sourcemaps nem comentários legais de dependências.
+  build: {
+    target: 'es2019',
+    sourcemap: false,
+    minify: 'esbuild',
+  },
+  esbuild: {
+    legalComments: 'none',
+  },
   test: { environment: 'node' },
 })
