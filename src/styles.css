@@ -745,3 +745,38 @@ textarea {
     gap: 0.4rem;
   }
 }
+
+.run-credit {
+  position: fixed;
+  right: 1.2rem;
+  bottom: 1rem;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid #ffffff20;
+  border-radius: 999px;
+  background: #090c0dbb;
+  color: #c4c9cd;
+  font-size: clamp(0.65rem, 0.85vw, 0.82rem);
+  letter-spacing: 0.025em;
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.run-credit strong {
+  color: #f4f5f6;
+  font-weight: 700;
+}
+.run-credit:hover {
+  color: #fff;
+  border-color: #d10f1c99;
+  background: #14181aee;
+}
+@media (max-width: 600px) {
+  .run-credit {
+    right: 0.65rem;
+    bottom: 0.65rem;
+  }
+}
