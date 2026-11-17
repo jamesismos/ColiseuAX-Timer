@@ -66,7 +66,7 @@ export default function Settings() {
           value={s.sound}
           onChange={(v) => set({ sound: v })}
           options={[
-            { value: 'arena', label: 'Arena' },
+            { value: 'arena', label: 'Timer de parede' },
             { value: 'sino', label: 'Sino clássico' },
             { value: 'beep', label: 'Beep' },
             { value: 'buzina', label: 'Buzina' },
