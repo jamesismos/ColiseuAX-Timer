@@ -775,8 +775,37 @@ textarea {
   background: #14181aee;
 }
 @media (max-width: 600px) {
+  /* No celular o selo entra no fim da tela em vez de flutuar sobre os botões */
   .run-credit {
-    right: 0.65rem;
-    bottom: 0.65rem;
+    position: static;
+    align-self: center;
+    margin-top: 0.8rem;
+  }
+}
+
+/* ---------- Telas pequenas: nada pode passar da borda ---------- */
+.run-top {
+  flex-wrap: wrap;
+}
+.run-top-actions {
+  min-width: 0;
+}
+.run-name {
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+.row-main {
+  min-width: 0;
+}
+@media (max-width: 520px) {
+  .row {
+    flex-wrap: wrap;
+  }
+  .row-main {
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+  }
+  .row > .btn:not(.row-main) {
+    flex: 1 1 auto;
   }
 }
