@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Analytics } from '@vercel/analytics/react'
 import { installRemoteControl, trackNavigation, usePath } from './lib/nav'
 import { useSettings } from './lib/storage'
 import Editor from './screens/Editor'
@@ -53,6 +54,7 @@ export default function App() {
   return (
     <div className="app" style={bg}>
       <Router path={path} />
+      <Analytics />
     </div>
   )
 }
