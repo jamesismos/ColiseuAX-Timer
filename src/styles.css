@@ -681,3 +681,31 @@ textarea {
     text-align: center;
   }
 }
+
+/* ---------- Logo da equipe ---------- */
+.rail .logo {
+  height: 4.2rem;
+  max-width: 5rem;
+}
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  right: -4rem;
+  top: 50%;
+  width: min(42vw, 38rem);
+  aspect-ratio: 1;
+  transform: translateY(-50%);
+  background: url('/logo.png') center / contain no-repeat;
+  opacity: 0.1;
+  pointer-events: none;
+}
+.hero > * {
+  position: relative;
+}
+.run-top .logo {
+  height: 3.6rem;
+}

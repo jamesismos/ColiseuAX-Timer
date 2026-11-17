@@ -32,12 +32,12 @@ npm run build      # gera dist/
 
 ## Logo
 
-A logo está vazia de propósito. Quando tiver o arquivo, use uma das opções:
+A logo da equipe está em `public/logo.png` (PNG transparente, para assentar em qualquer fundo). Para trocar:
 
 - Coloque `public/logo.png` no repositório (aparece no topo de todas as telas), ou
 - Em **Personalizar > Logo > Escolher imagem**, direto no aparelho.
 
-Os ícones em `public/icons/` são provisórios (monograma "AX"). Troque pelos definitivos mantendo os nomes e tamanhos.
+Os ícones em `public/icons/` já usam a logo da equipe sobre fundo vermelho.
 
 ## Controle remoto
 
