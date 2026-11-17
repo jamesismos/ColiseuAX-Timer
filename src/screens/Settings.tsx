@@ -4,7 +4,7 @@ import { playPhaseStart, unlockAudio } from '../lib/audio'
 import { DEFAULT_PHRASES } from '../lib/engine'
 import { DEFAULT_SETTINGS, resetAll, useSettings, type SoundStyle } from '../lib/storage'
 
-const COLORS = ['#f5b301', '#e11d2e', '#22c55e', '#3b82f6', '#a855f7', '#f97316', '#ffffff']
+const COLORS = ['#d10f1c', '#a80812', '#d9dadf', '#ffffff', '#f5b301', '#3b82f6']
 
 export default function Settings() {
   const [s, set] = useSettings()

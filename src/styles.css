@@ -1,14 +1,16 @@
 :root {
-  --bg: #0b0b0f;
-  --panel: #16161d;
-  --panel-2: #1f1f29;
-  --text: #f4f4f6;
-  --muted: #9a9aab;
-  --accent: #f5b301;
-  --danger: #ef4444;
-  --work: #16a34a;
-  --rest: #d97706;
-  --prep: #2563eb;
+  /* Cores da Team Alexandre Xuxa: vermelho, prata e preto */
+  --bg: #090c0d;
+  --panel: #14181a;
+  --panel-2: #1e2427;
+  --text: #f4f5f6;
+  --muted: #9aa1a6;
+  --accent: #d10f1c;
+  --silver: #d9dadf;
+  --danger: #ff6b6b;
+  --work: #d10f1c;
+  --rest: #aeb4ba;
+  --prep: #5b666d;
   --radius: 0.9rem;
 }
 
@@ -85,7 +87,7 @@ h2 {
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 4px solid var(--accent);
+  outline: 4px solid var(--silver);
   outline-offset: 2px;
   transform: scale(1.03);
 }
@@ -95,10 +97,13 @@ select:focus-visible {
 }
 .btn.primary {
   background: var(--accent);
-  color: #111;
+  color: #fff;
+}
+.btn.primary:hover {
+  background: #e5222f;
 }
 .btn.danger {
-  background: #3a1518;
+  background: #2e1215;
   color: #ffb4b4;
 }
 .btn.ghost {
@@ -201,7 +206,7 @@ select:focus-visible {
   justify-content: center;
 }
 .foot a {
-  color: var(--accent);
+  color: var(--silver);
   text-decoration: none;
 }
 
@@ -269,7 +274,7 @@ textarea {
 }
 .chip.on {
   background: var(--accent);
-  color: #111;
+  color: #fff;
   border-color: var(--accent);
   font-weight: 700;
 }
@@ -323,22 +328,23 @@ textarea {
   flex-direction: column;
   padding: 1.2rem 2rem 1.5rem;
   transition: background 0.25s;
-  background: #0b0b0f;
+  background: #090c0d;
 }
 .run.k-work {
-  background: radial-gradient(circle at 50% 40%, #0f3d20, #08130c 75%);
+  background: radial-gradient(circle at 50% 40%, #6b0a12, #1a0507 75%);
 }
 .run.k-rest {
-  background: radial-gradient(circle at 50% 40%, #4a2a05, #150d03 75%);
+  background: radial-gradient(circle at 50% 40%, #2c3135, #0b0d0e 75%);
 }
 .run.k-prep {
-  background: radial-gradient(circle at 50% 40%, #0f2a5c, #070d1c 75%);
+  background: radial-gradient(circle at 50% 40%, #1f282d, #090c0d 75%);
 }
 .run.k-done {
-  background: radial-gradient(circle at 50% 40%, #3a0f12, #120506 75%);
+  background: radial-gradient(circle at 50% 40%, #3a3f44, #0b0d0e 75%);
 }
 .run.warn .run-time {
-  color: #ff5a5a;
+  color: #ffffff;
+  text-shadow: 0 0 0.4em #ff2a38;
 }
 .run-top {
   display: flex;
@@ -385,7 +391,7 @@ textarea {
 }
 .bar-fill {
   height: 100%;
-  background: var(--accent);
+  background: var(--silver);
   transform-origin: left;
   transition: transform 0.12s linear;
 }
@@ -396,7 +402,7 @@ textarea {
 }
 .run-teacher {
   font-size: clamp(1rem, 1.8vw, 1.8rem);
-  color: var(--accent);
+  color: var(--silver);
   font-weight: 700;
 }
 .run-phrase {
@@ -433,11 +439,11 @@ textarea {
   color: #111;
 }
 .side-1 {
-  background: #1d4ed8;
+  background: #a80812;
   color: #fff;
 }
 .side.winner {
-  outline: 6px solid var(--accent);
+  outline: 6px solid var(--silver);
 }
 .side input.side-name {
   background: transparent;
@@ -492,11 +498,11 @@ textarea {
   font-variant-numeric: tabular-nums;
 }
 .board-time.live {
-  color: var(--accent);
+  color: #ff4452;
 }
 .board-result {
   font-weight: 800;
-  color: var(--accent);
+  color: var(--silver);
   text-align: center;
 }
 
@@ -516,8 +522,8 @@ textarea {
   min-height: 100vh;
 }
 .rail {
-  background: #0f0f15ee;
-  border-right: 1px solid #23232e;
+  background: #0d1112ee;
+  border-right: 1px solid #242b2e;
   padding: 1.5rem 1rem;
   display: flex;
   flex-direction: column;
@@ -547,7 +553,7 @@ textarea {
   background: var(--panel-2);
 }
 .rail-item:focus-visible {
-  outline: 4px solid var(--accent);
+  outline: 4px solid var(--silver);
   outline-offset: 2px;
   background: var(--panel-2);
 }
@@ -559,7 +565,7 @@ textarea {
   font-size: 0.9rem;
 }
 .rail-foot a {
-  color: var(--accent);
+  color: var(--silver);
   text-decoration: none;
 }
 .hero {
@@ -570,7 +576,7 @@ textarea {
   padding: 2rem 3rem;
 }
 .hero-kicker {
-  color: var(--accent);
+  color: #ff4452;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-weight: 700;

@@ -53,7 +53,7 @@ export const DEFAULT_SETTINGS: Settings = {
   academy: 'ColiseuAX',
   team: 'Team Alexandre Xuxa',
   teacher: '',
-  accent: '#f5b301',
+  accent: '#d10f1c',
   bgUrl: '',
   logoData: '',
   sound: 'sino',
