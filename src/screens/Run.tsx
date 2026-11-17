@@ -207,7 +207,7 @@ export default function Run({ kind, id }: { kind: 'timer' | 'playlist' | 'tv'; i
               </li>
             ))}
           </ol>
-          {settings.teacher && <div className="run-teacher">Prof. {settings.teacher}</div>}
+          <div className="run-teacher">{settings.teacher.trim() || 'SENSEI ALEXANDRE XUXA'}</div>
           {settings.showPhrases && phrases.length > 0 && phase.kind !== 'prep' && <div className="run-phrase">{phrases[phraseIdx % phrases.length]}</div>}
         </aside>
       </div>

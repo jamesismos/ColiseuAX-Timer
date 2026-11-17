@@ -52,7 +52,7 @@ export interface Settings {
 export const DEFAULT_SETTINGS: Settings = {
   academy: 'ColiseuAX',
   team: 'Team Alexandre Xuxa',
-  teacher: '',
+  teacher: 'SENSEI ALEXANDRE XUXA',
   accent: '#d10f1c',
   bgUrl: '',
   logoData: '',
