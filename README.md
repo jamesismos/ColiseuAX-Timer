@@ -48,6 +48,32 @@ Os ícones em `public/icons/` já usam a logo da equipe sobre fundo vermelho.
 | Voltar | Volta à tela anterior (Android TV, Fire TV, Tizen, webOS) |
 | Play/Pause | Inicia e pausa o timer |
 
-## APK Android TV
+## Instalar nos aparelhos
 
-A pasta `android/` descreve como empacotar o site como app Android (TWA) para Android TV e Fire TV. Veja `android/LEIAME.md`.
+O endereço **`seu-site.vercel.app/baixar`** (curto, fácil de digitar no controle) abre a tela de instalação. Ela detecta o aparelho,
+mostra o passo a passo dele primeiro e lista todos os outros: Android TV, TV Box, Fire TV, LG, Samsung, outra Smart TV,
+celular Android, iPhone e computador. Onde o navegador permite, aparece o botão **Adicionar à tela inicial**.
+
+Endereços curtos de download (a Vercel redireciona para `public/downloads/`):
+
+| Endereço | Arquivo | Para quê |
+| --- | --- | --- |
+| `/apk` | `ColiseuAX-Timer-AndroidTV.apk` | Android TV, Google TV, TV Box, Fire TV, celular |
+| `/webos` | `ColiseuAX-Timer-webOS.ipk` | TV LG (modo desenvolvedor) |
+| `/tizen` | `ColiseuAX-Timer-Tizen-projeto.zip` | TV Samsung (Tizen Studio, experimental) |
+
+Os pacotes ficam dentro do próprio app (funcionam sem internet). Em TV LG ou Samsung, o jeito mais simples continua sendo
+abrir o site no navegador da TV e adicionar aos favoritos.
+
+## Releases
+
+O workflow `.github/workflows/release.yml` gera os três pacotes, publica em `public/downloads/` (e a Vercel atualiza o site)
+e cria a Release no GitHub. Como o repositório é privado, a Release serve de arquivo para você; a TV baixa pelo site.
+
+```bash
+npm version patch          # sobe a versão (1.0.1), cria commit e tag
+git push --follow-tags     # o workflow roda sozinho
+```
+
+Gerar só webOS e Tizen no próprio computador: `npm run package:tv` (saída em `release/`).
+Detalhes de assinatura do APK em `android/LEIAME.md`.

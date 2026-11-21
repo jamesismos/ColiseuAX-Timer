@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react'
 
 // ---------- Roteamento por hash (funciona em qualquer navegador de TV e no APK) ----------
-export const currentPath = () => window.location.hash.replace(/^#/, '') || '/'
+// "/baixar" (endereço curto para digitar na TV) abre a tela de instalação
+export const currentPath = () => {
+  const hash = window.location.hash.replace(/^#/, '')
+  if (hash) return hash
+  return window.location.pathname.replace(/\/+$/, '') === '/baixar' ? '/install' : '/'
+}
 
 export function usePath(): string {
   const [path, setPath] = useState(currentPath())
@@ -22,6 +27,42 @@ export function trackNavigation() {
   window.addEventListener('hashchange', () => {
     depth++
   })
+}
+
+interface TizenApi {
+  application?: { getCurrentApplication: () => { exit: () => void } }
+  tvinputdevice?: { registerKey: (k: string) => void }
+}
+declare global {
+  interface Window {
+    tizen?: TizenApi
+    webOSSystem?: unknown
+    __caxBack?: () => boolean
+  }
+}
+
+/** Fecha o app quando ele roda empacotado (Tizen, webOS). Em navegador comum não faz nada. */
+export function exitApp(): boolean {
+  try {
+    if (window.tizen?.application) {
+      window.tizen.application.getCurrentApplication().exit()
+      return true
+    }
+    if ((window.webOSSystem || /Web0S|webOS/i.test(navigator.userAgent)) && window.location.protocol === 'file:') {
+      window.close()
+      return true
+    }
+  } catch {
+    /* sem permissão para fechar */
+  }
+  return false
+}
+
+/** Voltar de uma tela interna. Retorna false quando já está na tela inicial. */
+export function handleBack(): boolean {
+  if (currentPath() === '/') return false
+  goBack()
+  return true
 }
 
 export function goBack() {
@@ -109,8 +150,8 @@ export function installRemoteControl() {
     if (!action) return
 
     if (action === 'back') {
-      e.preventDefault()
-      goBack()
+      if (handleBack()) e.preventDefault()
+      else if (exitApp()) e.preventDefault()
       return
     }
     if (action === 'select') {
@@ -129,5 +170,15 @@ export function installRemoteControl() {
     // teclas de mídia são tratadas pela tela do timer
   }
   window.addEventListener('keydown', onKey)
-  return () => window.removeEventListener('keydown', onKey)
+  // O app Android chama isto quando o botão Voltar da TV é apertado
+  window.__caxBack = handleBack
+  try {
+    ;['MediaPlay', 'MediaPause', 'MediaPlayPause', 'MediaFastForward', 'MediaRewind'].forEach((k) => window.tizen?.tvinputdevice?.registerKey(k))
+  } catch {
+    /* fora do Tizen */
+  }
+  return () => {
+    window.removeEventListener('keydown', onKey)
+    window.__caxBack = undefined
+  }
 }

@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { Brand } from '../components/ui'
 import { TEMPLATES, TYPE_LABEL, buildPhases, formatTime, totalSeconds } from '../lib/engine'
+import { currentDevice } from '../lib/device'
+import { useInstall } from '../lib/install'
 import { go } from '../lib/nav'
 import { useSettings, useTimers } from '../lib/storage'
 
@@ -17,6 +19,11 @@ export default function Home() {
   const hero = useRef<HTMLButtonElement>(null)
   useEffect(() => hero.current?.focus(), [])
 
+  const { canPrompt, installed, prompt } = useInstall()
+  const device = currentDevice()
+  const installLabel = device.isTV ? 'Instalar na TV' : 'Adicionar à tela inicial'
+  const onInstall = () => (canPrompt ? void prompt() : go('/install'))
+
   const last = [...list, ...TEMPLATES].find((t) => t.id === s.lastTimerId) ?? TEMPLATES[0]
   const total = totalSeconds(buildPhases(last))
 
@@ -25,7 +32,7 @@ export default function Home() {
       <aside className="rail">
         <Brand />
         <nav className="rail-nav" aria-label="Menu">
-          {MENU.map((m) => (
+          {[...MENU, ...(installed ? [] : [{ to: '/install', icon: '⬇', title: 'Instalar' }])].map((m) => (
             <button key={m.to} className="rail-item" onClick={() => go(m.to)}>
               <span aria-hidden>{m.icon}</span>
               {m.title}
@@ -56,6 +63,11 @@ export default function Home() {
           <button className="btn big" onClick={() => go('/timers')}>
             Escolher outro
           </button>
+          {!installed && (
+            <button className="btn big install-cta" onClick={onInstall}>
+              ⬇ {installLabel}
+            </button>
+          )}
         </div>
       </section>
 

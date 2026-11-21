@@ -6,3 +6,10 @@ android/*.keystore
 android/*.jks
 android/build/
 *.tsbuildinfo
+
+dist-app
+release
+android/app/src/main/assets/www
+android/.gradle
+android/local.properties
+android/**/build/

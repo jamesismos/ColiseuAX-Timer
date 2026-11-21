@@ -1,0 +1,156 @@
+name: Release
+
+# Para publicar uma versão nova: suba o número em package.json, faça commit e crie a tag.
+#   npm version patch   (cria o commit e a tag v1.0.1)
+#   git push --follow-tags
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  tv:
+    name: Pacotes webOS e Tizen
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Conferir se a tag é igual à versão do package.json
+        if: github.ref_type == 'tag'
+        run: |
+          V="v$(node -p "require('./package.json').version")"
+          if [ "$V" != "$GITHUB_REF_NAME" ]; then
+            echo "A tag $GITHUB_REF_NAME não bate com a versão $V do package.json"
+            exit 1
+          fi
+      - run: npm run package:tv
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tv
+          path: release/*
+          if-no-files-found: error
+
+  android:
+    name: APK Android TV
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build:app
+      - name: Copiar o site para dentro do app
+        run: |
+          mkdir -p android/app/src/main/assets/www
+          cp -r dist-app/. android/app/src/main/assets/www/
+          rm -f android/app/src/main/assets/www/sw.js
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.9
+      - name: Chave de assinatura
+        env:
+          KS_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KS_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KS_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KS_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          KS="$RUNNER_TEMP/coliseuax.jks"
+          if [ -n "$KS_BASE64" ]; then
+            echo "$KS_BASE64" | base64 -d > "$KS"
+            PASS="$KS_PASSWORD"; ALIAS="$KS_ALIAS"; KPASS="${KS_KEY_PASSWORD:-$KS_PASSWORD}"
+          else
+            echo "::warning::Sem chave fixa nos Secrets. O APK sai assinado com uma chave temporária e, ao atualizar, será preciso desinstalar a versão anterior."
+            PASS="$(openssl rand -hex 16)"; ALIAS=coliseuax; KPASS="$PASS"
+            keytool -genkeypair -keystore "$KS" -storepass "$PASS" -keypass "$KPASS" -alias "$ALIAS" \
+              -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=ColiseuAX Timer, O=James Tech, C=BR"
+          fi
+          echo "::add-mask::$PASS"
+          {
+            echo "CAX_KEYSTORE=$KS"
+            echo "CAX_STORE_PASSWORD=$PASS"
+            echo "CAX_KEY_ALIAS=$ALIAS"
+            echo "CAX_KEY_PASSWORD=$KPASS"
+            echo "CAX_VERSION_CODE=$GITHUB_RUN_NUMBER"
+            echo "CAX_VERSION_NAME=$(node -p "require('./package.json').version")"
+          } >> "$GITHUB_ENV"
+      - name: Compilar
+        run: gradle -p android assembleRelease --no-daemon
+      - run: cp android/app/build/outputs/apk/release/app-release.apk ColiseuAX-Timer-AndroidTV.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: ColiseuAX-Timer-AndroidTV.apk
+          if-no-files-found: error
+
+  publicar:
+    name: Publicar no site e na Release
+    needs: [tv, android]
+    # Publica mesmo que o Android falhe, para não perder webOS e Tizen
+    if: ${{ !cancelled() && needs.tv.result == 'success' }}
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/download-artifact@v4
+        with:
+          name: tv
+          path: novos
+      - uses: actions/download-artifact@v4
+        if: needs.android.result == 'success'
+        with:
+          name: apk
+          path: novos
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Atualizar public/downloads
+        run: |
+          mkdir -p public/downloads
+          cp novos/* public/downloads/
+          VERSAO="$(node -p "require('./package.json').version")"
+          node -e "
+            const fs = require('fs'), d = 'public/downloads/'
+            const existe = (f) => fs.existsSync(d + f)
+            fs.writeFileSync(d + 'versao.json', JSON.stringify({
+              version: '$VERSAO',
+              atualizadoEm: new Date().toISOString().slice(0, 10),
+              arquivos: {
+                apk: existe('ColiseuAX-Timer-AndroidTV.apk'),
+                webos: existe('ColiseuAX-Timer-webOS.ipk'),
+                tizen: existe('ColiseuAX-Timer-Tizen-projeto.zip')
+              }
+            }, null, 2) + '\n')
+          "
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/downloads
+          git diff --cached --quiet || git commit -m "Publica pacotes da versão $VERSAO"
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Criar a Release
+        run: |
+          VERSAO="$(node -p "require('./package.json').version")"
+          TAG="v$VERSAO"
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "ColiseuAX Timer $TAG" --generate-notes --target main
+          gh release upload "$TAG" novos/* --clobber

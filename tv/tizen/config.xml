@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:tizen="http://tizen.org/ns/widgets" id="http://coliseuax.com.br/timer" version="1.0.0" viewmodes="maximized">
+  <tizen:application id="ColiseuAX0.Timer" package="ColiseuAX0" required_version="5.0"/>
+  <content src="index.html"/>
+  <feature name="http://tizen.org/feature/screen.size.all"/>
+  <icon src="icon.png"/>
+  <name>ColiseuAX Timer</name>
+  <author>James Tech</author>
+  <tizen:profile name="tv-samsung"/>
+  <tizen:setting screen-orientation="landscape" context-menu="disable" background-support="disable" encryption="disable" install-location="auto" hwkey-event="enable"/>
+  <access origin="*" subdomains="true"/>
+</widget>

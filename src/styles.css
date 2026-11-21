@@ -809,3 +809,23 @@ textarea {
     flex: 1 1 auto;
   }
 }
+
+/* ---------- Instalação ---------- */
+.install ol {
+  margin: 0.4rem 0 0.8rem;
+  padding-left: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  line-height: 1.4;
+}
+.metodo {
+  background: var(--panel);
+  border: 1px solid #242b2e;
+  border-radius: 1.1rem;
+  padding: 0.2rem 1.2rem 1rem;
+  margin-top: 1rem;
+}
+.install-cta {
+  border-color: var(--silver);
+}

@@ -1,5 +1,5 @@
 // Service worker simples: o app abre mesmo sem internet depois do primeiro acesso.
-const CACHE = 'coliseuax-timer-v1'
+const CACHE = 'coliseuax-timer-v2'
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE).then((c) => c.addAll(['/', '/manifest.webmanifest'])))
@@ -17,13 +17,18 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const req = event.request
-  if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return
+  const url = new URL(req.url)
+  if (req.method !== 'GET' || url.origin !== self.location.origin) return
+  // Pacotes para baixar e a lista de versões nunca ficam no cache
+  if (url.pathname.startsWith('/downloads/') || ['/apk', '/webos', '/tizen'].includes(url.pathname)) return
   // Rede primeiro (sempre a versão nova), cache como reserva offline
   event.respondWith(
     fetch(req)
       .then((res) => {
-        const copy = res.clone()
-        caches.open(CACHE).then((c) => c.put(req, copy))
+        if (res.status === 200) {
+          const copy = res.clone()
+          caches.open(CACHE).then((c) => c.put(req, copy))
+        }
         return res
       })
       .catch(() => caches.match(req).then((r) => r || caches.match('/'))),

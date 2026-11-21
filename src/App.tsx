@@ -3,6 +3,7 @@ import { installRemoteControl, trackNavigation, usePath } from './lib/nav'
 import { useSettings } from './lib/storage'
 import Editor from './screens/Editor'
 import Home from './screens/Home'
+import Install from './screens/Install'
 import { PlaylistEditor, PlaylistList } from './screens/Playlists'
 import Run from './screens/Run'
 import Scoreboard from './screens/Scoreboard'
@@ -30,6 +31,8 @@ function Router({ path }: { path: string }) {
       return <PlaylistEditor key={b} id={b ?? 'new'} />
     case 'settings':
       return <Settings />
+    case 'install':
+      return <Install />
     default:
       return <Home />
   }

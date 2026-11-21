@@ -6,7 +6,7 @@ import { useSettings } from '../lib/storage'
 export function Logo({ className = '' }: { className?: string }) {
   const [s] = useSettings()
   const [broken, setBroken] = useState(false)
-  const src = s.logoData || '/logo.png'
+  const src = s.logoData || `${import.meta.env.BASE_URL}logo.png`
   // Logo vazia por enquanto: sem arquivo, nada é exibido.
   if (!s.logoData && broken) return null
   return <img className={`logo ${className}`} src={src} alt="" onError={() => setBroken(true)} />

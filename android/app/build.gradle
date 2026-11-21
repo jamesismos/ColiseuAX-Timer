@@ -1,0 +1,44 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'br.com.coliseuax.timer'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'br.com.coliseuax.timer'
+        minSdk 21
+        targetSdk 34
+        versionCode (System.getenv('CAX_VERSION_CODE') ?: '1').toInteger()
+        versionName System.getenv('CAX_VERSION_NAME') ?: '1.0.0'
+    }
+
+    signingConfigs {
+        release {
+            if (System.getenv('CAX_KEYSTORE')) {
+                storeFile file(System.getenv('CAX_KEYSTORE'))
+                storePassword System.getenv('CAX_STORE_PASSWORD')
+                keyAlias System.getenv('CAX_KEY_ALIAS')
+                keyPassword System.getenv('CAX_KEY_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig System.getenv('CAX_KEYSTORE') ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}

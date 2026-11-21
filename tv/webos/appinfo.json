@@ -1,0 +1,13 @@
+{
+  "id": "br.com.coliseuax.timer",
+  "version": "1.0.0",
+  "vendor": "James Tech",
+  "type": "web",
+  "main": "index.html",
+  "title": "ColiseuAX Timer",
+  "icon": "icon.png",
+  "largeIcon": "largeIcon.png",
+  "bgColor": "#090c0d",
+  "iconColor": "#d10f1c",
+  "resolution": "1920x1080"
+}
