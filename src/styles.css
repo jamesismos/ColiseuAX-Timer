@@ -826,6 +826,31 @@ textarea {
   padding: 0.2rem 1.2rem 1rem;
   margin-top: 1rem;
 }
-.install-cta {
-  border-color: var(--silver);
+.rail-install {
+  appearance: none;
+  align-self: flex-start;
+  border: 2px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.6rem;
+  cursor: pointer;
+}
+.rail-install:hover {
+  color: var(--text);
+}
+.rail-install:focus-visible {
+  outline: 4px solid var(--silver);
+  outline-offset: 2px;
+  color: var(--text);
+}
+
+/* Ícones do menu com largura fixa, para os nomes ficarem alinhados */
+.rail-item > span[aria-hidden] {
+  display: inline-block;
+  width: 1.6rem;
+  text-align: center;
+  flex: none;
 }
