@@ -101,7 +101,7 @@ jobs:
           if-no-files-found: error
 
   publicar:
-    name: Publicar no site e na Release
+    name: Publicar na Release
     needs: [tv, android]
     # Publica mesmo que o Android falhe, para não perder webOS e Tizen
     if: ${{ !cancelled() && needs.tv.result == 'success' }}
@@ -110,8 +110,6 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: main
       - uses: actions/download-artifact@v4
         with:
           name: tv
@@ -121,36 +119,10 @@ jobs:
         with:
           name: apk
           path: novos
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Atualizar public/downloads
-        run: |
-          mkdir -p public/downloads
-          cp novos/* public/downloads/
-          VERSAO="$(node -p "require('./package.json').version")"
-          node -e "
-            const fs = require('fs'), d = 'public/downloads/'
-            const existe = (f) => fs.existsSync(d + f)
-            fs.writeFileSync(d + 'versao.json', JSON.stringify({
-              version: '$VERSAO',
-              atualizadoEm: new Date().toISOString().slice(0, 10),
-              arquivos: {
-                apk: existe('ColiseuAX-Timer-AndroidTV.apk'),
-                webos: existe('ColiseuAX-Timer-webOS.ipk'),
-                tizen: existe('ColiseuAX-Timer-Tizen-projeto.zip')
-              }
-            }, null, 2) + '\n')
-          "
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/downloads
-          git diff --cached --quiet || git commit -m "Publica pacotes da versão $VERSAO"
-          git pull --rebase origin main
-          git push origin HEAD:main
-      - name: Criar a Release
+      - name: Criar ou atualizar a Release
         run: |
           VERSAO="$(node -p "require('./package.json').version")"
           TAG="v$VERSAO"
-          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "ColiseuAX Timer $TAG" --generate-notes --target main
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "ColiseuAX Timer $TAG" --generate-notes --target "$GITHUB_SHA"
           gh release upload "$TAG" novos/* --clobber
+          ls -la novos

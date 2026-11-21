@@ -45,28 +45,6 @@
           "value": "*"
         }
       ]
-    },
-    {
-      "source": "/(apk|webos|tizen)",
-      "headers": [
-        {
-          "key": "Content-Disposition",
-          "value": "attachment"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "no-cache"
-        }
-      ]
-    },
-    {
-      "source": "/downloads/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache"
-        }
-      ]
     }
   ],
   "redirects": [
@@ -74,20 +52,21 @@
       "source": "/baixar",
       "destination": "/#/install",
       "permanent": false
-    }
-  ],
-  "rewrites": [
+    },
     {
       "source": "/apk",
-      "destination": "/downloads/ColiseuAX-Timer-AndroidTV.apk"
+      "destination": "https://github.com/jamesismos/coliseuax-timer/releases/latest/download/ColiseuAX-Timer-AndroidTV.apk",
+      "permanent": false
     },
     {
       "source": "/webos",
-      "destination": "/downloads/ColiseuAX-Timer-webOS.ipk"
+      "destination": "https://github.com/jamesismos/coliseuax-timer/releases/latest/download/ColiseuAX-Timer-webOS.ipk",
+      "permanent": false
     },
     {
       "source": "/tizen",
-      "destination": "/downloads/ColiseuAX-Timer-Tizen-projeto.zip"
+      "destination": "https://github.com/jamesismos/coliseuax-timer/releases/latest/download/ColiseuAX-Timer-Tizen-projeto.zip",
+      "permanent": false
     }
   ]
 }

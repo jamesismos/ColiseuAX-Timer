@@ -6,7 +6,7 @@ Aparece na tela inicial da TV com o banner da equipe (`LEANBACK_LAUNCHER`) e tam
 ## Como é gerado
 
 O APK é gerado automaticamente pelo workflow `.github/workflows/release.yml` quando uma tag `v*` é enviada
-(veja o README, seção Releases). O resultado vai para `public/downloads/` e para a Release do GitHub.
+(veja o README, seção Releases). O resultado vai para a Release do GitHub, e o site (`/apk`) aponta para ela.
 
 O build local não é necessário. Se quiser mesmo assim, é preciso Android SDK e Java 17:
 

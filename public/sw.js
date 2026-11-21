@@ -19,8 +19,8 @@ self.addEventListener('fetch', (event) => {
   const req = event.request
   const url = new URL(req.url)
   if (req.method !== 'GET' || url.origin !== self.location.origin) return
-  // Pacotes para baixar e a lista de versões nunca ficam no cache
-  if (url.pathname.startsWith('/downloads/') || ['/apk', '/webos', '/tizen'].includes(url.pathname)) return
+  // Endereços de download redirecionam para a Release e não entram no cache
+  if (['/apk', '/webos', '/tizen', '/baixar'].includes(url.pathname)) return
   // Rede primeiro (sempre a versão nova), cache como reserva offline
   event.respondWith(
     fetch(req)

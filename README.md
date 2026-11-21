@@ -54,7 +54,7 @@ O endereço **`seu-site.vercel.app/baixar`** (curto, fácil de digitar no contro
 mostra o passo a passo dele primeiro e lista todos os outros: Android TV, TV Box, Fire TV, LG, Samsung, outra Smart TV,
 celular Android, iPhone e computador. Onde o navegador permite, aparece o botão **Adicionar à tela inicial**.
 
-Endereços curtos de download (a Vercel redireciona para `public/downloads/`):
+Endereços curtos de download (a Vercel redireciona para a Release mais recente do GitHub):
 
 | Endereço | Arquivo | Para quê |
 | --- | --- | --- |
@@ -67,8 +67,8 @@ abrir o site no navegador da TV e adicionar aos favoritos.
 
 ## Releases
 
-O workflow `.github/workflows/release.yml` gera os três pacotes, publica em `public/downloads/` (e a Vercel atualiza o site)
-e cria a Release no GitHub. Como o repositório é privado, a Release serve de arquivo para você; a TV baixa pelo site.
+O workflow `.github/workflows/release.yml` gera os três pacotes e cria a Release no GitHub com eles. Os endereços curtos acima
+sempre apontam para a Release mais recente, então não é preciso mexer no site a cada versão.
 
 ```bash
 npm version patch          # sobe a versão (1.0.1), cria commit e tag

@@ -1,5 +1,5 @@
 import { useEffect, useState, useSyncExternalStore } from 'react'
-import type { Pacote } from './guides'
+import { PACOTES, type Pacote } from './guides'
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>
@@ -73,14 +73,26 @@ export interface Publicacao {
   arquivos: Record<Pacote, boolean>
 }
 
-/** Lê quais pacotes já estão publicados no site (arquivo versao.json). */
+const RELEASE_API = 'https://api.github.com/repos/jamesismos/coliseuax-timer/releases/latest'
+
+/** Lê a Release mais recente e quais pacotes ela tem. null: nenhuma publicada. undefined: ainda carregando ou sem resposta. */
 export function usePublicacao(): Publicacao | null | undefined {
   const [pub, setPub] = useState<Publicacao | null | undefined>(undefined)
   useEffect(() => {
     let vivo = true
-    fetch('/downloads/versao.json', { cache: 'no-store' })
-      .then((r) => (r.ok ? (r.json() as Promise<Publicacao>) : null))
-      .catch(() => null)
+    fetch(RELEASE_API)
+      .then(async (r) => {
+        if (r.status === 404) return null
+        if (!r.ok) return undefined
+        const j = (await r.json()) as { tag_name: string; published_at: string; assets: { name: string }[] }
+        const tem = (arquivo: string) => j.assets.some((a) => a.name === arquivo)
+        return {
+          version: j.tag_name.replace(/^v/, ''),
+          atualizadoEm: j.published_at.slice(0, 10),
+          arquivos: { apk: tem(PACOTES.apk.arquivo), webos: tem(PACOTES.webos.arquivo), tizen: tem(PACOTES.tizen.arquivo) },
+        }
+      })
+      .catch(() => undefined)
       .then((p) => vivo && setPub(p))
     return () => {
       vivo = false
