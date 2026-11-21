@@ -14,3 +14,6 @@ if ('serviceWorker' in navigator && import.meta.env.PROD && window.location.prot
     navigator.serviceWorker.register('/sw.js').catch(() => undefined)
   })
 }
+
+// Pede ao navegador para não apagar timers, playlists e ajustes quando faltar espaço
+navigator.storage?.persist?.().catch(() => undefined)

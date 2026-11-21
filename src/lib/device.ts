@@ -1,7 +1,7 @@
 // Identifica em que aparelho o site está aberto, para mostrar o jeito certo de instalar.
 
 export type Platform = 'webos' | 'tizen' | 'androidtv' | 'firetv' | 'tv' | 'android' | 'ios' | 'desktop'
-export type GuideId = 'androidtv' | 'firetv' | 'webos' | 'tizen' | 'tv' | 'android' | 'ios' | 'pc'
+export type GuideId = 'androidtv' | 'tv' | 'android' | 'ios' | 'pc'
 
 export interface Device {
   platform: Platform
@@ -42,5 +42,8 @@ export function currentDevice(): Device {
 }
 
 export function guideFor(p: Platform): GuideId {
-  return p === 'desktop' ? 'pc' : p
+  if (p === 'desktop') return 'pc'
+  if (p === 'firetv' || p === 'androidtv') return 'androidtv'
+  if (p === 'webos' || p === 'tizen' || p === 'tv') return 'tv'
+  return p
 }

@@ -50,30 +50,23 @@ Os ícones em `public/icons/` já usam a logo da equipe sobre fundo vermelho.
 
 ## Instalar nos aparelhos
 
-O endereço **`seu-site.vercel.app/baixar`** (curto, fácil de digitar no controle) abre a tela de instalação. Ela detecta o aparelho,
-mostra o passo a passo dele primeiro e lista todos os outros: Android TV, TV Box, Fire TV, LG, Samsung, outra Smart TV,
-celular Android, iPhone e computador. Onde o navegador permite, aparece o botão **Adicionar à tela inicial**.
+O endereço **`seu-site.vercel.app/baixar`** abre a tela de instalação. Ela detecta o aparelho e mostra o passo a passo dele.
 
-Endereços curtos de download (a Vercel redireciona para a Release mais recente do GitHub):
+- **Android TV, TV Box e Fire TV:** app (APK) pelo app Downloader, digitando `seu-site.vercel.app/apk`. Aparece na tela inicial da TV.
+- **Celular Android e computador:** atalho pelo navegador (botão Adicionar à tela inicial ou menu do Chrome). O APK também serve no Android.
+- **iPhone:** Safari, Compartilhar, Adicionar à Tela de Início.
+- **TV LG, Samsung e outras:** favorito no navegador da TV.
 
-| Endereço | Arquivo | Para quê |
-| --- | --- | --- |
-| `/apk` | `ColiseuAX-Timer-AndroidTV.apk` | Android TV, Google TV, TV Box, Fire TV, celular |
-| `/webos` | `ColiseuAX-Timer-webOS.ipk` | TV LG (modo desenvolvedor) |
-| `/tizen` | `ColiseuAX-Timer-Tizen-projeto.zip` | TV Samsung (Tizen Studio, experimental) |
-
-Os pacotes ficam dentro do próprio app (funcionam sem internet). Em TV LG ou Samsung, o jeito mais simples continua sendo
-abrir o site no navegador da TV e adicionar aos favoritos.
+Timers, playlists e ajustes ficam salvos no próprio aparelho. No iPhone, o app da tela de início guarda os dados separados do Safari.
 
 ## Releases
 
-O workflow `.github/workflows/release.yml` gera os três pacotes e cria a Release no GitHub com eles. Os endereços curtos acima
-sempre apontam para a Release mais recente, então não é preciso mexer no site a cada versão.
+O workflow `.github/workflows/release.yml` compila o APK e cria a Release no GitHub com ele. O endereço `/apk` sempre aponta
+para a Release mais recente, então não é preciso mexer no site a cada versão.
 
 ```bash
 npm version patch          # sobe a versão (1.0.1), cria commit e tag
 git push --follow-tags     # o workflow roda sozinho
 ```
 
-Gerar só webOS e Tizen no próprio computador: `npm run package:tv` (saída em `release/`).
 Detalhes de assinatura do APK em `android/LEIAME.md`.

@@ -57,16 +57,6 @@
       "source": "/apk",
       "destination": "https://github.com/jamesismos/coliseuax-timer/releases/latest/download/ColiseuAX-Timer-AndroidTV.apk",
       "permanent": false
-    },
-    {
-      "source": "/webos",
-      "destination": "https://github.com/jamesismos/coliseuax-timer/releases/latest/download/ColiseuAX-Timer-webOS.ipk",
-      "permanent": false
-    },
-    {
-      "source": "/tizen",
-      "destination": "https://github.com/jamesismos/coliseuax-timer/releases/latest/download/ColiseuAX-Timer-Tizen-projeto.zip",
-      "permanent": false
     }
   ]
 }

@@ -89,7 +89,7 @@ export function usePublicacao(): Publicacao | null | undefined {
         return {
           version: j.tag_name.replace(/^v/, ''),
           atualizadoEm: j.published_at.slice(0, 10),
-          arquivos: { apk: tem(PACOTES.apk.arquivo), webos: tem(PACOTES.webos.arquivo), tizen: tem(PACOTES.tizen.arquivo) },
+          arquivos: { apk: tem(PACOTES.apk.arquivo) },
         }
       })
       .catch(() => undefined)

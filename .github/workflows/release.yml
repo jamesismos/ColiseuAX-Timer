@@ -16,8 +16,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  tv:
-    name: Pacotes webOS e Tizen
+  android:
+    name: APK Android
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,23 +35,6 @@ jobs:
             echo "A tag $GITHUB_REF_NAME não bate com a versão $V do package.json"
             exit 1
           fi
-      - run: npm run package:tv
-      - uses: actions/upload-artifact@v4
-        with:
-          name: tv
-          path: release/*
-          if-no-files-found: error
-
-  android:
-    name: APK Android TV
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-      - run: npm ci
       - run: npm run build:app
       - name: Copiar o site para dentro do app
         run: |
@@ -102,20 +85,13 @@ jobs:
 
   publicar:
     name: Publicar na Release
-    needs: [tv, android]
-    # Publica mesmo que o Android falhe, para não perder webOS e Tizen
-    if: ${{ !cancelled() && needs.tv.result == 'success' }}
+    needs: android
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
-        with:
-          name: tv
-          path: novos
-      - uses: actions/download-artifact@v4
-        if: needs.android.result == 'success'
         with:
           name: apk
           path: novos
@@ -125,4 +101,3 @@ jobs:
           TAG="v$VERSAO"
           gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "ColiseuAX Timer $TAG" --generate-notes --target "$GITHUB_SHA"
           gh release upload "$TAG" novos/* --clobber
-          ls -la novos

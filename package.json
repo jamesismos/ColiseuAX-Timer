@@ -9,8 +9,7 @@
     "preview": "vite preview --host",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
-    "build:app": "tsc -b && vite build --mode app",
-    "package:tv": "npm run build:app && node scripts/package-tv.mjs"
+    "build:app": "tsc -b && vite build --mode app"
   },
   "dependencies": {
     "react": "^18.3.1",

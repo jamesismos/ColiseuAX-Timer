@@ -48,6 +48,10 @@ describe('deviceFrom e guideFor', () => {
   })
   it('computador usa o guia pc', () => {
     expect(guideFor('desktop')).toBe('pc')
-    expect(guideFor('firetv')).toBe('firetv')
+    expect(guideFor('firetv')).toBe('androidtv')
+    expect(guideFor('androidtv')).toBe('androidtv')
+    expect(guideFor('webos')).toBe('tv')
+    expect(guideFor('tizen')).toBe('tv')
+    expect(guideFor('ios')).toBe('ios')
   })
 })
